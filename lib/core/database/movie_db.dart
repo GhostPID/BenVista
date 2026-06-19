@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import '../models/movie.dart';
+import '../../models/movie.dart';
 
 class MovieDB {
   static final MovieDB instance = MovieDB._init();
@@ -25,6 +25,27 @@ class MovieDB {
     );
   }
 
+  Future<List<Movie>> searchMovies(String query) async {
+  final db = await instance.database;
+
+  final result = await db.query(
+    'movies',
+    where: 'title LIKE ?',
+    whereArgs: ['%$query%'],
+  );
+
+  return result.map((e) => Movie.fromMap(e)).toList();
+}
+
+  Future<int> deleteMovie(int id) async {
+  final db = await instance.database;
+  return await db.delete(
+    'movies',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
+
   Future _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE movies (
@@ -38,8 +59,27 @@ class MovieDB {
 
   Future<int> createMovie(Movie movie) async {
     final db = await instance.database;
-    return await db.insert('movies', movie.toMap());
+
+    return await db.insert(
+      'movies',
+      {
+        'title': movie.title,
+        'score': movie.score,
+        'status': movie.status,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
+  Future<int> updateMovie(Movie movie) async {
+  final db = await instance.database;
+
+  return await db.update(
+    'movies',
+    movie.toMap(),
+    where: 'id = ?',
+    whereArgs: [movie.id],
+  );
+}
 
   Future<List<Movie>> getMovies() async {
     final db = await instance.database;

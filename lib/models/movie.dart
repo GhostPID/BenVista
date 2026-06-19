@@ -1,8 +1,8 @@
 class Movie {
-  int? id;
-  String title;
-  double score;
-  String status;
+  final int? id;
+  final String title;
+  final double score;
+  final String status;
 
   Movie({
     this.id,
@@ -13,7 +13,6 @@ class Movie {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'score': score,
       'status': status,
@@ -24,7 +23,7 @@ class Movie {
     return Movie(
       id: map['id'],
       title: map['title'],
-      score: map['score'],
+      score: (map['score'] as num).toDouble(),
       status: map['status'],
     );
   }
