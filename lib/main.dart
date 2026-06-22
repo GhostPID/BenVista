@@ -1,3 +1,4 @@
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
 import 'add_movie_screen.dart';
 import 'core/database/movie_db.dart';
@@ -6,17 +7,19 @@ import 'features/movies/data/movie_repository.dart';
 import 'features/movies/screens/edit_movie_screen.dart';
 
 void main() {
-  runApp(const MovieVaultApp());
+    sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
+  runApp(const BenVistaApp());
 }
 
-class MovieVaultApp extends StatelessWidget {
-  const MovieVaultApp({super.key});
+class BenVistaApp extends StatelessWidget {
+  const BenVistaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'MovieVault',
+      title: 'BenVista',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -63,22 +66,25 @@ List<Movie> movies = [];
     }
   }
 
- void addMovie(Map<String, dynamic> movieData) async {
+void addMovie(Map<String, dynamic> movieData) async {
   try {
     final movie = Movie(
-      title: movieData["title"],
-      score: movieData["score"],
-      status: movieData["status"],
+      title: movieData["title"].toString(),
+      score: double.parse(movieData["score"].toString()),
+      status: movieData["status"].toString(),
     );
-    print("ADDING MOVIE: ${movieData.toString()}");
+
+    print("ADDING: ${movie.toMap()}");
 
     await repo.addMovie(movie);
-    print("MOVIE SAVED SUCCESSFULLY");
+
+    print("SAVED SUCCESS");
+
     await loadMovies();
   } catch (e) {
-    print("ERROR ADDING MOVIE: $e");
+    print("ADD MOVIE ERROR: $e");
   }
- }
+}
 
 void searchMovies(String query) async {
   if (query.isEmpty) {
