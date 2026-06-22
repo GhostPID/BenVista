@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "movie_vault" "\0"
+            VALUE "FileDescription", "BenVista" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "movie_vault" "\0"
+            VALUE "InternalName", "BenVista" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "movie_vault.exe" "\0"
-            VALUE "ProductName", "movie_vault" "\0"
+            VALUE "OriginalFilename", "BenVista.exe" "\0"
+            VALUE "ProductName", "BenVista" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

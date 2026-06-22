@@ -1,6 +1,6 @@
 {
-    "name": "movie_vault",
-    "short_name": "movie_vault",
+    "name": "BenVista",
+    "short_name": "BenVista",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

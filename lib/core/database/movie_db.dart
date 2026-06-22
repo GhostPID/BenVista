@@ -10,7 +10,7 @@ class MovieDB {
 
   Future<Database> get database async {
     if (_db != null) return _db!;
-    _db = await _initDB('movie_vault.db');
+    _db = await _initDB('BenVista.db');
     return _db!;
   }
 
