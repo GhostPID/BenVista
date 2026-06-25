@@ -20,7 +20,6 @@ class MovieRepository {
     await db.deleteMovie(id);
   }
 
-  // ✅ این هم اضافه کن:
   Future<void> updateMovie(Movie movie) async {
     await db.updateMovie(movie);
   }

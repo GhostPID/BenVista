@@ -13,6 +13,7 @@ class Movie {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'score': score,
       'status': status,

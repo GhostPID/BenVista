@@ -1,11 +1,9 @@
+import 'features/movies/screens/edit_movie_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
 import 'add_movie_screen.dart';
-import 'core/database/movie_db.dart';
 import 'models/movie.dart';
 import 'features/movies/data/movie_repository.dart';
-import 'features/movies/screens/edit_movie_screen.dart';
-
 void main() {
     sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
@@ -163,8 +161,21 @@ void searchMovies(String query) async {
                     child: Card(
                     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     child: ListTile(
-                      contentPadding: const EdgeInsets.all(12),
+                      onTap: () async {
+                        final updatedMovie = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditMovieScreen(movie: movie),
+                          ),
+                        );
 
+                        if (updatedMovie != null) {
+                          await repo.updateMovie(updatedMovie);
+                          await loadMovies();
+                        }
+                      },
+
+                      contentPadding: const EdgeInsets.all(12),
                       leading: CircleAvatar(
                         child: Text(movie.score.toString()),
                       ),
