@@ -70,6 +70,8 @@ void addMovie(Map<String, dynamic> movieData) async {
       title: movieData["title"].toString(),
       score: double.parse(movieData["score"].toString()),
       status: movieData["status"].toString(),
+      notes: movieData["notes"]?.toString() ?? '',
+      watchDate: movieData["watchDate"]?.toString(),
     );
 
     print("ADDING: ${movie.toMap()}");
@@ -186,8 +188,11 @@ void searchMovies(String query) async {
                       ),
 
                       subtitle: Text(
-                        "Status: ${movie.status}",
+                        "Status: ${movie.status}"
+                        "\nDate: ${movie.watchDate ?? '-'}"
+                        "\nNotes: ${movie.notes}",
                       ),
+                                          
 
                       trailing: Icon(
                         movie.status == "Watched"

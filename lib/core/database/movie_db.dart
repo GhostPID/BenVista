@@ -20,8 +20,21 @@ class MovieDB {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 3,
       onCreate: _createDB,
+     onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+            'ALTER TABLE movies ADD COLUMN notes TEXT DEFAULT ""',
+          );
+        }
+
+        if (oldVersion < 3) {
+          await db.execute(
+            'ALTER TABLE movies ADD COLUMN watchDate TEXT',
+          );
+        }
+      },
     );
   }
 
@@ -52,7 +65,9 @@ class MovieDB {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         score REAL NOT NULL,
-        status TEXT NOT NULL
+        status TEXT NOT NULL,
+        notes TEXT,
+        watchDate TEXT
       )
     ''');
   }
@@ -66,6 +81,8 @@ class MovieDB {
         'title': movie.title,
         'score': movie.score,
         'status': movie.status,
+        'notes': movie.notes,
+        'watchDate': movie.watchDate,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

@@ -3,12 +3,16 @@ class Movie {
   final String title;
   final double score;
   final String status;
+  final String notes;
+  final String? watchDate;
 
   Movie({
     this.id,
     required this.title,
     required this.score,
     required this.status,
+    this.watchDate,
+    this.notes = '',
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +21,8 @@ class Movie {
       'title': title,
       'score': score,
       'status': status,
+      'notes': notes,
+      'watchDate': watchDate,
     };
   }
 
@@ -26,6 +32,8 @@ class Movie {
       title: map['title'],
       score: (map['score'] as num).toDouble(),
       status: map['status'],
+      notes: map['notes'] ?? '',
+      watchDate: map['watchDate'],
     );
   }
 }

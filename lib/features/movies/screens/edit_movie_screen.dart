@@ -12,24 +12,39 @@ class EditMovieScreen extends StatefulWidget {
 
 class _EditMovieScreenState extends State<EditMovieScreen> {
   late TextEditingController titleController;
+  late TextEditingController notesController;
   late double score;
   late String status;
+  DateTime? selectedDate;
 
   @override
-  void initState() {
-    super.initState();
-    titleController = TextEditingController(text: widget.movie.title);
-    score = widget.movie.score;
-    status = widget.movie.status;
-  }
+    void initState() {
+      super.initState();
+
+      titleController =
+          TextEditingController(text: widget.movie.title);
+
+      notesController =
+          TextEditingController(text: widget.movie.notes);
+
+      score = widget.movie.score;
+      status = widget.movie.status;
+
+      if (widget.movie.watchDate != null &&
+       widget.movie.watchDate!.isNotEmpty) {
+       selectedDate = DateTime.parse(widget.movie.watchDate!);
+     }
+    }
 
   void save() {
     final updatedMovie = Movie(
-      id: widget.movie.id,
-      title: titleController.text,
-      score: score,
-      status: status,
-    );
+    id: widget.movie.id,
+    title: titleController.text,
+    score: score,
+    status: status,
+    notes: notesController.text,
+    watchDate: selectedDate?.toString().split(' ')[0],
+  );
 
     Navigator.pop(context, updatedMovie);
   }
@@ -48,7 +63,15 @@ class _EditMovieScreenState extends State<EditMovieScreen> {
             ),
 
             const SizedBox(height: 20),
-
+              TextField(
+                controller: notesController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  labelText: "Notes",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              
             Text("Score: ${score.toStringAsFixed(1)}"),
             Slider(
               value: score,
@@ -72,6 +95,30 @@ class _EditMovieScreenState extends State<EditMovieScreen> {
               },
             ),
 
+            const SizedBox(height: 12),
+
+            ElevatedButton(
+              onPressed: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                  initialDate: selectedDate ?? DateTime.now(),
+                );
+
+                if (picked != null) {
+                  setState(() {
+                    selectedDate = picked;
+                  });
+                }
+              },
+              child: Text(
+                selectedDate == null
+                    ? "Select Watch Date"
+                    : selectedDate.toString().split(' ')[0],
+              ),
+            ),
+
             const Spacer(),
 
             ElevatedButton(
@@ -82,5 +129,11 @@ class _EditMovieScreenState extends State<EditMovieScreen> {
         ),
       ),
     );
+  }
+    @override
+  void dispose() {
+    titleController.dispose();
+    notesController.dispose();
+    super.dispose();
   }
 }

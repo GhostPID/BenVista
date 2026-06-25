@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+
 class AddMovieScreen extends StatefulWidget {
   const AddMovieScreen({super.key});
 
@@ -11,9 +13,20 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController titleController = TextEditingController();
+  final TextEditingController notesController =
+    TextEditingController();
 
+    @override
+    void dispose() {
+      titleController.dispose();
+      notesController.dispose();
+      super.dispose();
+    }
+    
   double score = 5;
   String status = "Watched";
+
+  DateTime? selectedDate;
 
   void saveMovie() {
     if (_formKey.currentState!.validate()) {
@@ -21,6 +34,8 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
         "title": titleController.text,
         "score": score,
         "status": status,
+        "notes": notesController.text,
+        "watchDate": selectedDate?.toString().split(' ')[0],
       });
     }
   }
@@ -54,7 +69,16 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
                 },
               ),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
+
+              TextFormField(
+                controller: notesController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  labelText: "Notes",
+                  border: OutlineInputBorder(),
+                ),
+              ),
 
               // Score
               Text("Score: ${score.toStringAsFixed(1)}"),
@@ -93,6 +117,28 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
               ),
 
               const Spacer(),
+
+              ElevatedButton(
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                    initialDate: DateTime.now(),
+                  );
+
+                  if (picked != null) {
+                    setState(() {
+                      selectedDate = picked;
+                    });
+                  }
+                },
+                child: Text(
+                  selectedDate == null
+                      ? "Select Watch Date (Optional)"
+                      : selectedDate.toString().split(' ')[0],
+                ),
+              ),
 
               // Save button
               SizedBox(
